@@ -11,8 +11,12 @@ import locationPinImage from "../assets/web-story-2/location.png";
 import bencana1 from "../assets/web-story-2/bencana1.jpg";
 import bencana2 from "../assets/web-story-2/bencana2.jpg";
 import bencana3 from "../assets/web-story-2/bencana3.jpg";
+import bencana4 from "../assets/web-story-2/bencana4.jpg";
 import pengungsian from "../assets/web-story-2/pengungsian.jpg";
 import relawan from "../assets/web-story-2/relawan.jpg";
+import warga1 from "../assets/web-story-2/warga1.jpg";
+import warga2 from "../assets/web-story-2/warga2.jpg";
+import warga3 from "../assets/web-story-2/warga3.jpg";
 
 // Helper function to load district GeoJSON from indonesia-district folder
 const loadDistrictsData = async () => {
@@ -137,7 +141,7 @@ function Findings() {
   const disasterCards = useRef([]);
   const [activeRegion, setActiveRegion] = useState(0);
   const [activeImpactRegion, setActiveImpactRegion] = useState(0);
-  const [viewMode, setViewMode] = useState('points'); // 'points' or 'districts'
+  const [viewMode, setViewMode] = useState('points'); // 'points', 'districts', or 'damage'
   const [districtsData, setDistrictsData] = useState(null); // Store loaded districts data
   const cardsRef = useRef({});
 
@@ -251,6 +255,14 @@ function Findings() {
         { type: "Sedang", count: 650 },
         { type: "Ringan", count: 295 }
       ],
+      damageDetails: [
+        { icon: "🏠", label: "Hunian Rusak Total", value: "1,200" },
+        { icon: "🏢", label: "Bangunan Publik", value: "45" },
+        { icon: "🛣️", label: "Jalan Rusak", value: "23 km" },
+        { icon: "💧", label: "Sumber Air Tercemar", value: "8" }
+      ],
+      photo: bencana1,
+      photoCaption: "Kondisi banjir bandang di Aceh - dampak bencana alam yang signifikan",
       facilities: ["Sekolah", "Rumah Sakit", "Puskesmas"],
       stories: "Komunitas Aceh telah menunjukkan ketangguhan luar biasa dalam pemulihan.",
       needs: ["Shelter", "Makanan", "Obat-obatan", "Air Bersih"],
@@ -275,6 +287,14 @@ function Findings() {
         { type: "Sedang", count: 980 },
         { type: "Ringan", count: 491 }
       ],
+      damageDetails: [
+        { icon: "🏠", label: "Hunian Rusak Total", value: "1,950" },
+        { icon: "🏢", label: "Bangunan Publik", value: "62" },
+        { icon: "🛣️", label: "Jalan Rusak", value: "42 km" },
+        { icon: "🌊", label: "Luas Banjir", value: "156 hektar" }
+      ],
+      photo: bencana2,
+      photoCaption: "Dampak gempa bumi di Sumatera Utara - kerusakan struktur bangunan",
       facilities: ["Sekolah", "Rumah Sakit", "Pasar", "Kantor Pemerintah"],
       stories: "Sumatera Utara memperlihatkan semangat gotong royong yang kuat.",
       needs: ["Shelter", "Logistik", "Alat Berat", "Dukungan Psikologis"],
@@ -299,6 +319,14 @@ function Findings() {
         { type: "Sedang", count: 820 },
         { type: "Ringan", count: 406 }
       ],
+      damageDetails: [
+        { icon: "🏠", label: "Hunian Rusak Total", value: "1,650" },
+        { icon: "🏢", label: "Bangunan Publik", value: "38" },
+        { icon: "🛣️", label: "Jalan Rusak", value: "35 km" },
+        { icon: "⛰️", label: "Area Longsor", value: "78 hektar" }
+      ],
+      photo: bencana3,
+      photoCaption: "Bencana longsor lahan di Sumatera Barat - ancaman bagi pemukiman",
       facilities: ["Sekolah", "Klinik", "Balai Kesehatan"],
       stories: "Masyarakat Sumatera Barat terus berjuang untuk bangkit.",
       needs: ["Shelter", "Makanan", "Tenaga Medis", "Peralatan"],
@@ -646,20 +674,24 @@ function Findings() {
         const direction = e.deltaY > 0 ? 1 : -1;
         
         if (direction > 0) {
-          // Scroll down: points → districts → next region
+          // Scroll down: points → districts → damage → next region
           if (viewMode === 'points') {
             setViewMode('districts');
-          } else {
+          } else if (viewMode === 'districts') {
+            setViewMode('damage');
+          } else if (viewMode === 'damage') {
             setViewMode('points');
             const nextRegion = (activeRegion + 1) % regionsData.length;
             setActiveRegion(nextRegion);
           }
         } else {
-          // Scroll up: reverse
-          if (viewMode === 'districts') {
-            setViewMode('points');
-          } else {
+          // Scroll up: points ← districts ← damage ← prev region
+          if (viewMode === 'damage') {
             setViewMode('districts');
+          } else if (viewMode === 'districts') {
+            setViewMode('points');
+          } else if (viewMode === 'points') {
+            setViewMode('damage');
             const prevRegion = activeRegion === 0 ? regionsData.length - 1 : activeRegion - 1;
             setActiveRegion(prevRegion);
           }
@@ -1525,6 +1557,70 @@ function Findings() {
             })}
           </div>
         </nav>
+
+        {/* Damage Cards - Displayed when viewMode is 'damage' */}
+        {viewMode === 'damage' && (
+          <div className="damage-cards-container">
+            {/* Damage Statistics Card */}
+            <div className="damage-card damage-stats-card">
+              <div className="damage-card-header">
+                <h3 className="damage-card-title">Statistik Kerusakan</h3>
+                <p className="damage-card-region">{regionsData[activeRegion].name}</p>
+              </div>
+
+              <div className="damage-card-content">
+                <div className="damage-grid">
+                  {regionsData[activeRegion].damageDetails.map((detail, idx) => (
+                    <div key={idx} className="damage-item">
+                      <div className="damage-item-icon">{detail.icon}</div>
+                      <div className="damage-item-info">
+                        <div className="damage-item-value">{detail.value}</div>
+                        <div className="damage-item-label">{detail.label}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="damage-summary">
+                  <div className="summary-item">
+                    <span className="summary-label">Total Hunian Rusak</span>
+                    <span className="summary-value">
+                      {regionsData[activeRegion].damage.reduce((acc, d) => acc + d.count, 0).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="summary-breakdown">
+                    {regionsData[activeRegion].damage.map((item, idx) => (
+                      <div key={idx} className="breakdown-item">
+                        <span className="breakdown-type">{item.type}</span>
+                        <span className="breakdown-count">{item.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="damage-card-footer">
+                <p className="scroll-hint">Scroll untuk kembali atau lanjut</p>
+              </div>
+            </div>
+
+            {/* Photo Condition Card */}
+            <div className="damage-card photo-condition-card">
+              <div className="photo-card-header">
+                <h3 className="photo-card-title">Kondisi Lapangan</h3>
+              </div>
+
+              <div className="photo-card-content">
+                <img 
+                  src={regionsData[activeRegion].photo} 
+                  alt={regionsData[activeRegion].photoCaption}
+                  className="condition-photo"
+                />
+                <p className="photo-caption">{regionsData[activeRegion].photoCaption}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* IMPACT SECTION - Dampak Utama dengan Peta Interaktif Scroll-Triggered */}
