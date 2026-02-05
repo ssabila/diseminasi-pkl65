@@ -1,0 +1,71 @@
+.story {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.story-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem;
+}
+
+.story h1 {
+  font-size: 2.5rem;
+  color: var(--dark-green);
+  margin-bottom: 0.5rem;
+}
+
+.story-subtitle {
+  font-size: 1.1rem;
+  color: var(--dark-green);
+  opacity: 0.7;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--dark-green);
+  border-opacity: 0.2;
+}
+
+.story-body {
+  margin-bottom: 3rem;
+  line-height: 1.8;
+  color: var(--dark-green);
+}
+
+.story-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--dark-green);
+  border-opacity: 0.2;
+}
+
+.nav-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 400;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-button.back {
+  background: transparent;
+  color: var(--dark-green);
+  border: 1px solid var(--dark-green);
+}
+
+.nav-button.back:hover {
+  background: var(--dark-green);
+  color: var(--butter-yellow);
+}
+
+.nav-button.next {
+  background: var(--dark-green);
+  color: var(--butter-yellow);
+}
+
+.nav-button.next:hover {
+  opacity: 0.9;
+  transform: translateX(4px);
+}
